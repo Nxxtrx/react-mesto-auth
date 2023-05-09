@@ -1,0 +1,21 @@
+.authorization__input{
+  background-color: #000;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  margin-top: 30px;
+  padding: 0 0 13px 1px;
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: calc(17/14);
+
+}
+
+
+input::-webkit-input-placeholder {
+  color: #ccc;
+}
+
+input:-moz-placeholder {
+  color: #ccc;
+}

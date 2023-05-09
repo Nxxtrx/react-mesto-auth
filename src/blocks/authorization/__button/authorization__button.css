@@ -1,0 +1,10 @@
+.authorization__button{
+  background-color: #FFFFFF;
+  height: 50px;
+  margin-top: 216px;
+  border: none;
+  border-radius: 2px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: calc(22/18);
+}
