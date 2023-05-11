@@ -5,7 +5,7 @@ import Footer from './Footer.jsx'
 import PopupWithForm from './PopupWithForm.jsx';
 import ImagePopup from './ImagePopup.jsx';
 import React from 'react';
-import { Route, Routes} from 'react-router-dom'
+import { Route, Routes, useNavigate} from 'react-router-dom'
 import { api } from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.jsx';
 import EditProfilePopup from './EditProfilePopup.jsx';
@@ -14,6 +14,7 @@ import AddPlacePopup from './AddPlacePopup.jsx';
 import Login from './Login.jsx';
 import Register from './Register.jsx';
 import ProtectedRouteElement from './ProtectedRoute.jsx';
+import * as auth from '../utils/auth.js';
 
 
 
@@ -34,10 +35,14 @@ function App() {
 
   const[loggedIn, setLoggedIn] = React.useState(false)
 
+  const[emailAuth, setEmailAuth] = React.useState('')
 
-  function handleLogin() {
-    setLoggedIn(true)
-  }
+  const navigate = useNavigate()
+
+
+  React.useEffect(() => {
+    handletokenCheck()
+  }, [])
 
 
   React.useEffect(() => {
@@ -116,10 +121,28 @@ function App() {
     .finally(() => setIsLodaing(false))
   }
 
+  function handleLogin() {
+    setLoggedIn(true)
+  }
+
+  function handletokenCheck() {
+    if(localStorage.getItem('jwt')) {
+      const jwt = localStorage.getItem('jwt');
+      auth.checkToken(jwt).then((res) => {
+        if(res) {
+          console.log(res.data.email)
+          setEmailAuth(res.data.email)
+          setLoggedIn(true);
+          navigate('/')
+        }
+      }).catch((err) => console.log(err))
+    }
+  }
+
   return (
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
-          <Header />
+          <Header loggedIn={loggedIn} userEmail={emailAuth} />
           <Routes>
             <Route path="/sign-up" element={<Register />} />
             <Route path="/sign-in" element={<Login onAvtorizationUser={handleLogin} />} />

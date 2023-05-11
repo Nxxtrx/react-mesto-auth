@@ -64,3 +64,6 @@
 @import url('./blocks//authorization/__button/authorization__button.css');
 @import url('./blocks/authorization/__login-in/authorization__login-in.css');
 @import url('./blocks/authorization/__entry-link/authorization__entry-link.css');
+@import url('./blocks/header/__link/header__link.css');
+@import url('./blocks/header/__container/header__container.css');
+@import url('./blocks/header/__user/header__user.css');
