@@ -15,6 +15,8 @@ import Login from './Login.jsx';
 import Register from './Register.jsx';
 import ProtectedRouteElement from './ProtectedRoute.jsx';
 import * as auth from '../utils/auth.js';
+import InfoTooltip from './InfoTooltip.jsx';
+
 
 
 
@@ -24,6 +26,7 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen]= React.useState(false);
+  const [isRegistrInfoPopupOpen, setIsRegistrInfoPopupOpen] = React.useState(false)
 
   const [selectedCard, setSelectedCard] = React.useState({});
 
@@ -36,6 +39,8 @@ function App() {
   const[loggedIn, setLoggedIn] = React.useState(false)
 
   const[emailAuth, setEmailAuth] = React.useState('')
+
+  const[registrationStatus, setRegistrationStatus] = React.useState(false)
 
   const navigate = useNavigate()
 
@@ -67,12 +72,20 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
+  function handleSubmitRegistr() {
+    setIsRegistrInfoPopupOpen(true)
+  }
+
   function closeAllPopups() {
     setIsAddPlacePopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsImagePopupOpen(false);
     setSelectedCard({});
+  }
+
+  function closeRegistrInfoPopup() {
+    setIsRegistrInfoPopupOpen(false)
   }
 
   function handleCardClick(card) {
@@ -130,22 +143,58 @@ function App() {
       const jwt = localStorage.getItem('jwt');
       auth.checkToken(jwt).then((res) => {
         if(res) {
-          console.log(res.data.email)
           setEmailAuth(res.data.email)
           setLoggedIn(true);
           navigate('/')
+          console.log(emailAuth)
         }
       }).catch((err) => console.log(err))
     }
   }
 
+  function handleAuthUser(password, email) {
+    auth.authorize(password, email).then((data) => {
+      if (data) {
+        setEmailAuth(email)
+        handleLogin()
+        navigate('/')
+      }
+    })
+  }
+
+  function handleRegistrUser(password, email) {
+    auth.registr(password, email).then((res) => {
+      console.log(res)
+      if (res.data) {
+        setRegistrationStatus(true)
+        handleSubmitRegistr()
+        navigate('/sign-in')
+      }
+      if(res.error) {
+        setRegistrationStatus(false)
+        handleSubmitRegistr()
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
+
+  function signOut() {
+    localStorage.removeItem('jwt')
+    setLoggedIn(false)
+    setEmailAuth('')
+    navigate('/sign-in')
+  }
+
+
   return (
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
-          <Header loggedIn={loggedIn} userEmail={emailAuth} />
+          <Header signOut={signOut} userEmail={emailAuth} />
           <Routes>
-            <Route path="/sign-up" element={<Register />} />
-            <Route path="/sign-in" element={<Login onAvtorizationUser={handleLogin} />} />
+            <Route path="/sign-up" element={<Register onRegistrUser={handleRegistrUser} />} />
+            <Route path="/sign-in" element={<Login onAuthUser={handleAuthUser} />} />
             <Route path="/" element={<ProtectedRouteElement element={Main} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} onEditProfile={handleEditProfileClick} isAddPlacePopupOpen={handleAddPlaceClick} isEditAvatarPopupOpen = {handleEditAvatarClick} onCardClick={handleCardClick} loggedIn={loggedIn} />} />
           </Routes>
           {loggedIn ? <Footer /> : ''}
@@ -159,6 +208,7 @@ function App() {
 
           <PopupWithForm name = {'confirm-deletion'} title = {'Вы уверены?'} ></PopupWithForm>
 
+          <InfoTooltip isOpen={isRegistrInfoPopupOpen} onClose={closeRegistrInfoPopup} registrationStatus={registrationStatus}/>
         </div>
       </CurrentUserContext.Provider>
   );

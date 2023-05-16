@@ -1,11 +1,7 @@
 import React from "react"
-import { useNavigate } from "react-router-dom"
-import * as auth from '../utils/auth.js'
 
-export default function Login({onAvtorizationUser}) {
+export default function Login({onAuthUser}) {
   const [formValue, setFormValue] = React.useState({email: '', password: ''})
-
-  const navigate = useNavigate()
 
   const handleChange = (e) => {
     const {name, value} = e.target;
@@ -15,21 +11,13 @@ export default function Login({onAvtorizationUser}) {
       [name]: value
     });
   }
-  console.log(onAvtorizationUser)
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(!formValue.email || !formValue.password) {
-      return;
-    }
-
-    auth.authorize(formValue.password, formValue.email).then((data) => {
-      if (data) {
-        setFormValue({email: '', password: ''});
-        onAvtorizationUser();
-        navigate('/')
-      }
-    })
+    onAuthUser(formValue.password, formValue.email)
+    setFormValue({email: '', password: ''});
   }
+
   return (
     <div className="authorization">
       <h1 className="authorization__title">Вход</h1>

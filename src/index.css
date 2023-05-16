@@ -67,3 +67,7 @@
 @import url('./blocks/header/__link/header__link.css');
 @import url('./blocks/header/__container/header__container.css');
 @import url('./blocks/header/__user/header__user.css');
+@import url('./blocks/header/__output-btn/header__output-btn.css');
+@import url('./blocks/popup/__registr-container/popup__registr-container.css');
+@import url('./blocks/popup/__status-image/popup__status-image.css');
+@import url('./blocks/popup/__status-title/popup__status-title.css');
