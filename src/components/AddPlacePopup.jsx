@@ -1,29 +1,22 @@
 import React from "react"
-import { useInput } from "../hooks/useInput";
 import PopupWithForm from "./PopupWithForm"
+import { useFormAndValidation } from "../hooks/useValidationInput";
 
 export default function AddPlacePopup({isOpen, onClose, onAddPlace, isLoading}) {
 
-  const [name, setName] = React.useState('');
-  const [link, setLink] = React.useState('');
+  const {values, errors, isValid, setIsValid, handleChange, resetForm} = useFormAndValidation()
 
-  const namePictureInput = useInput('', {isEmpty: true, minLength: 2})
-  const linkPictureInput = useInput(' ', {isEmpty: true, link: true})
-
-  const [errorMessageName, setErrorMesageName] = React.useState('')
-  const [errorMessageLink, setErrorMesageLink] = React.useState('')
-
+  const {name, link} = values
 
   React.useEffect(() => {
-    setErrorMesageLink('');
-    setErrorMesageName('');
-    setName('')
-    setLink('')
-    linkPictureInput.setLinkError(true)
-    namePictureInput.setIsValid(false)
-    linkPictureInput.setIsValid(false)
-  }, [onClose, onAddPlace])
+    if(!name && !link){
+      setIsValid(false)
+    }
+  }, [name, link])
 
+  React.useEffect(() => {
+    resetForm()
+  }, [onClose])
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -33,19 +26,9 @@ export default function AddPlacePopup({isOpen, onClose, onAddPlace, isLoading}) 
       link: link
     })
 
+    resetForm()
   }
 
-  function handleChangeNameCard(e) {
-    setName(e.target.value)
-    namePictureInput.onChange(e)
-    setErrorMesageName(e.target.validationMessage)
-  }
-
-  function handleChangeLinkCard(e) {
-    setLink(e.target.value)
-    linkPictureInput.onChange(e)
-    setErrorMesageLink(e.target.validationMessage)
-  }
 
   return (
     <PopupWithForm
@@ -55,7 +38,7 @@ export default function AddPlacePopup({isOpen, onClose, onAddPlace, isLoading}) 
       onClose={onClose}
       onSubmit={handleSubmit}
       isLoading={isLoading}
-      onDisabled={!namePictureInput.isValid || !linkPictureInput.isValid}
+      onDisabled={!isValid}
     >
       <input
         className="popup__profile-edit popup__profile-edit_type_title"
@@ -67,12 +50,9 @@ export default function AddPlacePopup({isOpen, onClose, onAddPlace, isLoading}) 
         minLength="2"
         maxLength="30"
         value={name || ''}
-        onChange={(e) => handleChangeNameCard(e)}
-        onFocus={namePictureInput.onFocus}
+        onChange={handleChange}
       />
-      <span className="popup__input-error picture-title-error">
-        {((namePictureInput.isDerty && namePictureInput.isEmpty) || (namePictureInput.isDerty && namePictureInput.minLengthError)) ? errorMessageName : ''}
-      </span>
+      <span className="popup__input-error picture-title-error">{errors.name}</span>
       <input
         className="popup__profile-edit popup__profile-edit_type_src"
         type="url"
@@ -81,12 +61,9 @@ export default function AddPlacePopup({isOpen, onClose, onAddPlace, isLoading}) 
         placeholder="Ссылка на картинку"
         required
         value={link || ''}
-        onChange={(e) => handleChangeLinkCard(e)}
-        onFocus={linkPictureInput.onFocus}
+        onChange={handleChange}
       />
-      <span className="popup__input-error picture-url-error">
-        {((linkPictureInput.isDerty && linkPictureInput.isEmpty) || (linkPictureInput.isDerty && linkPictureInput.linkError)) ? errorMessageLink : ''}
-      </span>
+      <span className="popup__input-error picture-url-error">{errors.link}</span>
     </PopupWithForm>
   );
 }

@@ -1,42 +1,22 @@
 import React from "react"
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import { useInput } from "../hooks/useInput";
 import PopupWithForm from "./PopupWithForm"
+import { useFormAndValidation } from "../hooks/useValidationInput";
 
 export default function EditProfilePopup({isOpen, onClose, onUpdateUser, isLoading}) {
 
+  const {values, errors, isValid, handleChange, setValues} = useFormAndValidation()
 
-
-  const [userName, setUserName] = React.useState('');
-  const [description, setDescription] = React.useState('');
-
-  const [errorMessageUserName, setErrorMessageUserName] = React.useState('')
-  const [errorMessageDescription, setErrorMessageDescription] = React.useState('')
-
-  const userNameInput = useInput('', {isEmpty: true, minLength: 2})
-  const userDescriptionInput = useInput('', {isEmpty: true, minLength: 2})
-
-
+  const {userName, description} = values
 
   const currentUser = React.useContext(CurrentUserContext);
 
   React.useEffect(() => {
-    setUserName(currentUser.name);
-    setDescription(currentUser.about)
+    if(isOpen) {
+      setValues({userName: currentUser.name, description: currentUser.about})
+    }
+
   }, [isOpen])
-
-  React.useEffect(() => {
-    userNameInput.setIsValid(true)
-    userDescriptionInput.setIsValid(true)
-    setErrorMessageUserName('')
-    setErrorMessageDescription('')
-  }, [onClose])
-
-  function handleChangeName(e) {
-    setUserName(e.target.value);
-    userNameInput.onChange(e)
-    setErrorMessageUserName(e.target.validationMessage)
-  }
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -47,12 +27,6 @@ export default function EditProfilePopup({isOpen, onClose, onUpdateUser, isLoadi
     })
   }
 
-  function handleChangeDescription(e) {
-    setDescription(e.target.value);
-    userDescriptionInput.onChange(e)
-    setErrorMessageDescription(e.target.validationMessage)
-  }
-
   return (
     <PopupWithForm
       name={"edit"}
@@ -61,29 +35,23 @@ export default function EditProfilePopup({isOpen, onClose, onUpdateUser, isLoadi
       onClose={onClose}
       onSubmit={handleSubmit}
       isLoading={isLoading}
-      onDisabled={!userNameInput.isValid || !userDescriptionInput.isValid}
+      onDisabled={!isValid}
     >
 
       <input
         type="text"
         className="popup__profile-edit popup__profile-edit_type_name"
         id="profile-name"
-        name="name"
+        name="userName"
         placeholder="Имя"
         required
         minLength="2"
         maxLength="40"
-        value={userName || ""}
-        onChange={handleChangeName}
-        onFocus={userNameInput.onFocus}
+        value={userName || ''}
+        onChange={handleChange}
       />
 
-      <span className="popup__input-error profile-name-error">
-        {(userNameInput.isDerty && userNameInput.isEmpty) ||
-        (userNameInput.isDerty && userNameInput.minLengthError)
-          ? errorMessageUserName
-          : ""}
-      </span>
+      <span className="popup__input-error profile-name-error">{errors.userName}</span>
 
       <input
         className="popup__profile-edit popup__profile-edit_type_description"
@@ -95,16 +63,10 @@ export default function EditProfilePopup({isOpen, onClose, onUpdateUser, isLoadi
         minLength="2"
         maxLength="200"
         value={description || ""}
-        onChange={handleChangeDescription}
-        onFocus={userDescriptionInput.onFocus}
+        onChange={handleChange}
       />
 
-      <span className="popup__input-error profile-description-error">
-        {(userDescriptionInput.isDerty && userDescriptionInput.isEmpty) ||
-        (userDescriptionInput.isDerty && userDescriptionInput.minLengthError)
-          ? errorMessageDescription
-          : ""}
-      </span>
+      <span className="popup__input-error profile-description-error">{errors.description}</span>
 
     </PopupWithForm>
   );

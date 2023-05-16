@@ -146,7 +146,6 @@ function App() {
           setEmailAuth(res.data.email)
           setLoggedIn(true);
           navigate('/')
-          console.log(emailAuth)
         }
       }).catch((err) => console.log(err))
     }

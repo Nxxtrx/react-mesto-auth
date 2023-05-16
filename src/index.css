@@ -71,3 +71,5 @@
 @import url('./blocks/popup/__registr-container/popup__registr-container.css');
 @import url('./blocks/popup/__status-image/popup__status-image.css');
 @import url('./blocks/popup/__status-title/popup__status-title.css');
+@import url('./blocks/authorization/__input-error/authorization__input-error.css');
+@import url('./blocks/authorization/__button/_type/authorization__button_type_inactive.css');

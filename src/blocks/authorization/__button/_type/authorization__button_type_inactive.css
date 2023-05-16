@@ -1,0 +1,10 @@
+.authorization__button_type_inactive {
+  cursor: default;
+  opacity: 1;
+}
+
+.authorization__button_type_inactive:hover {
+  opacity: 1;
+}
+
+

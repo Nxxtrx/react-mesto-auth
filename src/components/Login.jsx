@@ -1,21 +1,21 @@
 import React from "react"
+import { useFormAndValidation } from "../hooks/useValidationInput";
 
 export default function Login({onAuthUser}) {
-  const [formValue, setFormValue] = React.useState({email: '', password: ''})
 
-  const handleChange = (e) => {
-    const {name, value} = e.target;
+  const {values, errors, isValid, setIsValid, handleChange} = useFormAndValidation()
 
-    setFormValue({
-      ...formValue,
-      [name]: value
-    });
-  }
+  const {email, password} = values
+
+  React.useEffect(() => {
+    if(!email && !password) {
+      setIsValid(false)
+    }
+  }, [email, password])
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAuthUser(formValue.password, formValue.email)
-    setFormValue({email: '', password: ''});
+    onAuthUser(password, email)
   }
 
   return (
@@ -27,20 +27,27 @@ export default function Login({onAuthUser}) {
           type="email"
           placeholder="Email"
           name="email"
-          value={formValue.email || ''}
+          required
+          minLength='3'
+          value={email || ''}
           onChange={handleChange}
         />
+        <span className="authorization__input-error">{errors.email}</span>
         <input
           className="authorization__input authorization__input_type_password"
           type="password"
           placeholder="Пароль"
           name="password"
-          value={formValue.password || ''}
+          required
+          minLength='3'
+          value={password || ''}
           onChange={handleChange}
         />
+        <span className="authorization__input-error">{errors.password}</span>
         <button
           className="authorization__button authorization__button_type_submit"
           type="submit"
+          disabled={!isValid}
         >
           Войти
         </button>
