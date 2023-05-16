@@ -10,8 +10,9 @@
   cursor: pointer;
   opacity: 1;
   transition: opacity .1s linear;
+  color: #000;
 }
 
 .authorization__button:hover {
-  opacity: .8;
+  opacity: .85;
 }

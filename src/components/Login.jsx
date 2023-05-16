@@ -45,7 +45,7 @@ export default function Login({onAuthUser}) {
         />
         <span className="authorization__input-error">{errors.password}</span>
         <button
-          className="authorization__button authorization__button_type_submit"
+          className={`authorization__button ${isValid ? "" : "authorization__button_type_inactive"}`}
           type="submit"
           disabled={!isValid}
         >

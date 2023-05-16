@@ -1,4 +1,3 @@
-
 import Header from './Header.jsx';
 import Main from './Main.jsx';
 import Footer from './Footer.jsx'
@@ -17,9 +16,6 @@ import ProtectedRouteElement from './ProtectedRoute.jsx';
 import * as auth from '../utils/auth.js';
 import InfoTooltip from './InfoTooltip.jsx';
 
-
-
-
 function App() {
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -29,17 +25,14 @@ function App() {
   const [isRegistrInfoPopupOpen, setIsRegistrInfoPopupOpen] = React.useState(false)
 
   const [selectedCard, setSelectedCard] = React.useState({});
+  const [cards, setCards] = React.useState([]);
 
   const [currentUser, setCurrentUser] = React.useState('')
-
-  const [cards, setCards] = React.useState([]);
 
   const [isLoading, setIsLodaing] = React.useState(false)
 
   const[loggedIn, setLoggedIn] = React.useState(false)
-
   const[emailAuth, setEmailAuth] = React.useState('')
-
   const[registrationStatus, setRegistrationStatus] = React.useState(false)
 
   const navigate = useNavigate()
@@ -48,7 +41,6 @@ function App() {
   React.useEffect(() => {
     handletokenCheck()
   }, [])
-
 
   React.useEffect(() => {
     api.getUserInfo().then(data => {
@@ -147,7 +139,7 @@ function App() {
           setLoggedIn(true);
           navigate('/')
         }
-      }).catch((err) => console.log(err))
+      }).catch((err) => console.log(`Ошибка: ${err}`))
     }
   }
 
@@ -158,7 +150,7 @@ function App() {
         handleLogin()
         navigate('/')
       }
-    })
+    }).catch(err => console.log(`Ошибка: ${err}`))
   }
 
   function handleRegistrUser(password, email) {
@@ -174,10 +166,9 @@ function App() {
         handleSubmitRegistr()
       }
     }).catch((err) => {
-      console.log(err)
+      console.log(`Ошибка: ${err}`)
     })
   }
-
 
   function signOut() {
     localStorage.removeItem('jwt')
@@ -185,7 +176,6 @@ function App() {
     setEmailAuth('')
     navigate('/sign-in')
   }
-
 
   return (
       <CurrentUserContext.Provider value={currentUser}>

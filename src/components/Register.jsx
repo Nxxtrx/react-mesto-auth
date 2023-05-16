@@ -5,7 +5,6 @@ import { useFormAndValidation } from "../hooks/useValidationInput";
 export default function Register({onRegistrUser}) {
 
   const {values, errors, isValid, setIsValid, handleChange} = useFormAndValidation()
-
   const {email, password } = values
 
   React.useEffect(() => {
