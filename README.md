@@ -37,7 +37,7 @@
 
 1. Клонировать репозиторий:
 ```
-  $ git clone https://github.com/Nxxtrx/mesto-react.git
+  $ git clone https://github.com/Nxxtrx/react-mesto-auth.git
 ```
 2. Перейти в репозиторий:
 ```
