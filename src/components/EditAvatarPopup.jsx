@@ -23,7 +23,6 @@ export default function EditAvatarPopup({isOpen, onClose, onUpdateAvatar, isLoad
     onUpdateAvatar({
       avatar: avatarLink
     })
-    resetForm()
   }
 
   return (

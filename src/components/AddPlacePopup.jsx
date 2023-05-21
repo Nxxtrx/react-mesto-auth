@@ -26,7 +26,6 @@ export default function AddPlacePopup({isOpen, onClose, onAddPlace, isLoading}) 
       link: link
     })
 
-    resetForm()
   }
 
 

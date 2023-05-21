@@ -43,14 +43,16 @@ function App() {
   }, [])
 
   React.useEffect(() => {
-    api.getUserInfo().then(data => {
-      setCurrentUser(data)
-    }).catch(err => console.log(`Ошибка: ${err}`));
+    if (loggedIn) {
+      api.getUserInfo().then(data => {
+        setCurrentUser(data)
+      }).catch(err => console.log(`Ошибка: ${err}`));
 
-    api.getInitialCards().then(data => {
-      setCards(data)
-    }).catch(err => console.log(`Ошибка: ${err}`));
-  }, [])
+      api.getInitialCards().then(data => {
+        setCards(data)
+      }).catch(err => console.log(`Ошибка: ${err}`));
+    }
+  }, [loggedIn])
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
